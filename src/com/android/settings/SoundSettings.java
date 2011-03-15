@@ -52,6 +52,7 @@ public class SoundSettings extends PreferenceActivity implements
     private static final String KEY_DTMF_TONE = "dtmf_tone";
     private static final String KEY_SOUND_EFFECTS = "sound_effects";
     private static final String KEY_HAPTIC_FEEDBACK = "haptic_feedback";
+    private static final String KEY_CUSTOM_HAPTIC_FEEDBACK = "custom_haptic_feedback";
     private static final String KEY_EMERGENCY_TONE = "emergency_tone";
     private static final String KEY_SOUND_SETTINGS = "sound_settings";
     private static final String KEY_NOTIFICATION_PULSE = "notification_pulse";
@@ -75,6 +76,7 @@ public class SoundSettings extends PreferenceActivity implements
     private CheckBoxPreference mDtmfTone;
     private CheckBoxPreference mSoundEffects;
     private CheckBoxPreference mHapticFeedback;
+    private CheckBoxPreference mCustomHapticFeedback;
     private CheckBoxPreference mNotificationPulse;
     private CheckBoxPreference mLockSounds;
 
@@ -123,6 +125,10 @@ public class SoundSettings extends PreferenceActivity implements
         mHapticFeedback.setPersistent(false);
         mHapticFeedback.setChecked(Settings.System.getInt(resolver,
                 Settings.System.HAPTIC_FEEDBACK_ENABLED, 0) != 0);
+        mCustomHapticFeedback = (CheckBoxPreference) findPreference(KEY_CUSTOM_HAPTIC_FEEDBACK);
+        mCustomHapticFeedback.setPersistent(false);
+        mCustomHapticFeedback.setChecked(Settings.System.getInt(resolver,
+                Settings.System.CUSTOM_HAPTIC_FEEDBACK_ENABLED, 0) != 0);
         mLockSounds = (CheckBoxPreference) findPreference(KEY_LOCK_SOUNDS);
         mLockSounds.setPersistent(false);
         mLockSounds.setChecked(Settings.System.getInt(resolver,
@@ -303,6 +309,10 @@ public class SoundSettings extends PreferenceActivity implements
         } else if (preference == mHapticFeedback) {
             Settings.System.putInt(getContentResolver(), Settings.System.HAPTIC_FEEDBACK_ENABLED,
                     mHapticFeedback.isChecked() ? 1 : 0);
+
+        } else if (preference == mCustomHapticFeedback) {
+            Settings.System.putInt(getContentResolver(), Settings.System.CUSTOM_HAPTIC_FEEDBACK_ENABLED,
+                    mCustomHapticFeedback.isChecked() ? 1 : 0);
 
         } else if (preference == mLockSounds) {
             Settings.System.putInt(getContentResolver(), Settings.System.LOCKSCREEN_SOUNDS_ENABLED,

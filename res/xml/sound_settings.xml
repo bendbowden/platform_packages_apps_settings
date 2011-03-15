@@ -108,6 +108,14 @@
             android:summaryOff="@string/haptic_feedback_enable_summary_off"
             android:defaultValue="true" />
 
+    <CheckBoxPreference
+            android:dependency="haptic_feedback"
+            android:key="custom_haptic_feedback"
+            android:title="@string/custom_haptic_feedback_enable_title"
+            android:summaryOn="@string/custom_haptic_feedback_enable_summary_on"
+            android:summaryOff="@string/custom_haptic_feedback_enable_summary_off"
+            android:defaultValue="false" />
+
     <ListPreference
             android:key="emergency_tone"
             android:title="@string/emergency_tone_title"
