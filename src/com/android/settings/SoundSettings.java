@@ -53,6 +53,7 @@ public class SoundSettings extends PreferenceActivity implements
     private static final String KEY_SOUND_EFFECTS = "sound_effects";
     private static final String KEY_HAPTIC_FEEDBACK = "haptic_feedback";
     private static final String KEY_CUSTOM_HAPTIC_FEEDBACK = "custom_haptic_feedback";
+    private static final String KEY_HAPTIC_FEEDBACK_VIBRATION_VALUE = "haptic_feedback_vibration_value";
     private static final String KEY_EMERGENCY_TONE = "emergency_tone";
     private static final String KEY_SOUND_SETTINGS = "sound_settings";
     private static final String KEY_NOTIFICATION_PULSE = "notification_pulse";
@@ -77,6 +78,7 @@ public class SoundSettings extends PreferenceActivity implements
     private CheckBoxPreference mSoundEffects;
     private CheckBoxPreference mHapticFeedback;
     private CheckBoxPreference mCustomHapticFeedback;
+    private ListPreference mHapticFeedbackVibrationValue;
     private CheckBoxPreference mNotificationPulse;
     private CheckBoxPreference mLockSounds;
 
@@ -129,6 +131,8 @@ public class SoundSettings extends PreferenceActivity implements
         mCustomHapticFeedback.setPersistent(false);
         mCustomHapticFeedback.setChecked(Settings.System.getInt(resolver,
                 Settings.System.CUSTOM_HAPTIC_FEEDBACK_ENABLED, 0) != 0);
+        mHapticFeedbackVibrationValue = (ListPreference) findPreference(KEY_HAPTIC_FEEDBACK_VIBRATION_VALUE);
+        mHapticFeedbackVibrationValue.setOnPreferenceChangeListener(this);
         mLockSounds = (CheckBoxPreference) findPreference(KEY_LOCK_SOUNDS);
         mLockSounds.setPersistent(false);
         mLockSounds.setChecked(Settings.System.getInt(resolver,
@@ -214,6 +218,15 @@ public class SoundSettings extends PreferenceActivity implements
         }
     }
 
+    private int getHapticFeedbackVibrationValue(ListPreference pref) {
+        try {
+            return Settings.System.getInt(getContentResolver(), Settings.System.HAPTIC_FEEDBACK_VIBRATION_VALUE);
+        }
+            catch (SettingNotFoundException e) {
+            return 30;
+        }
+    }
+
     private void setPhoneVibrateSettingValue(String value) {
         boolean vibeInSilent;
         int callsVibrateSetting;
@@ -249,6 +262,15 @@ public class SoundSettings extends PreferenceActivity implements
             callsVibrateSetting);
     }
 
+    public void setHapticFeedbackVibrationValue(Object objValue) {
+        try {
+            int val = Integer.parseInt(objValue.toString());
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.HAPTIC_FEEDBACK_VIBRATION_VALUE, val);
+        } catch (NumberFormatException e) {
+        }
+    }
+
     // updateState in fact updates the UI to reflect the system state
     private void updateState(boolean force) {
         final int ringerMode = mAudioManager.getRingerMode();
@@ -276,6 +298,8 @@ public class SoundSettings extends PreferenceActivity implements
         mSilent.setSummary(isAlarmInclSilentMode ?
                 R.string.silent_mode_incl_alarm_summary :
                 R.string.silent_mode_summary);
+
+        getHapticFeedbackVibrationValue(mHapticFeedbackVibrationValue);
     }
 
     @Override
@@ -339,6 +363,9 @@ public class SoundSettings extends PreferenceActivity implements
             }
         } else if (preference == mVibrate) {
             setPhoneVibrateSettingValue(objValue.toString());
+            updateState(false);
+        } else if (preference == mHapticFeedbackVibrationValue) {
+            setHapticFeedbackVibrationValue(objValue);
             updateState(false);
         }
 
