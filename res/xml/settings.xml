@@ -176,12 +176,12 @@
 
         <!-- Spare Parts -->
         <com.android.settings.IconPreferenceScreen
-            settings:icon="@drawable/ic_settings_spareparts"
-            android:title="@string/spare_settings_title">
+            settings:icon="@drawable/ic_tsm_settings"
+            android:title="@string/tsm_settings_title">
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetPackage="com.android.spare_parts"
-                android:targetClass="com.android.spare_parts.SpareParts" />
+                android:targetPackage="com.android.tsm_settings"
+                android:targetClass="com.android.tsm_settings.activity.TSMSettings" />
         </com.android.settings.IconPreferenceScreen>
 
         <!-- About Device -->
